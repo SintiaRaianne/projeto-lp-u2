@@ -1,4 +1,4 @@
-#include "DNAProfile.hpp"                    // Inclui a declaração da classe
+#include "DNAProfile.hpp"                   // Inclui a declaração da classe
 #include <fstream>                          // Ler arquivos
 #include <iostream>                         // Mensagens de erro
 #include <sstream>                          // Funções como remove()

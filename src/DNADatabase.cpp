@@ -103,7 +103,7 @@ std::string DNADatabase::findProfile(const std::map<std::string, int>& profile) 
 }
 
 std::vector<std::string> DNADatabase::getSTRNames() const {
-    return strNames;              //Retorna a lista de STRs
+    return strNames;              // Retorna a lista de STRs
 }
 
 bool DNADatabase::isLoaded() const {

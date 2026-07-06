@@ -6,35 +6,37 @@
 #include <map>
 #include <memory>
 
-// Estrutura para armazenar o perfil de um indivíduo
+/* 
+Estrutura para armazenar o perfil de um indivíduo
+
+Cada pessoa na base de dados tem: 
+ - Um nome (string)
+ - Um mapa com os STRs e suas contagens
+*/
+
 struct IndividualProfile {
-    std::string name;
-    std::map<std::string, int> strCounts;
+    std::string name;                            // Nome da pessoa
+    std::map<std::string, int> strCounts;       // STR (Quantas repetições)
 };
 
 class DNADatabase {
 private:
-    std::vector<std::string> strNames;  // Nomes dos STRs na ordem do CSV
-    std::vector<IndividualProfile> profiles;  // Lista de perfis de indivíduos
-    bool loaded;
+    std::vector<std::string> strNames;              // Nomes dos STRs na ordem do CSV
+    std::vector<IndividualProfile> profiles;       // Lista de perfis carregados
+    bool loaded;                                  // True se a base foi carregada com sucesso e False caso contrário
     
 public:
     DNADatabase();
     
-    // Carrega a base de dados de um arquivo CSV
-    bool loadFromFile(const std::string& filename);
+    bool loadFromFile(const std::string& filename);             // Carrega a base de dados do arquivo CSV
     
-    // Busca por um perfil na base de dados
-    std::string findProfile(const std::map<std::string, int>& profile) const;
+    std::string findProfile(const std::map<std::string, int>& profile) const;       // Busca pelo perfil na base de dados, retornando a pessoa encontrada ou "no match found"
     
-    // Retorna a lista de STRs da base
-    std::vector<std::string> getSTRNames() const;
+    std::vector<std::string> getSTRNames() const;              // Retorna a lista de nomes dosSTRs da base
     
-    // Verifica se a base foi carregada
-    bool isLoaded() const;
+    bool isLoaded() const;                      // Verifica se a base foi carregada corretamente
     
-    // Retorna informações da base
-    void printDatabaseInfo() const;
+    void printDatabaseInfo() const;           // Retorna informações da base
 };
 
 #endif

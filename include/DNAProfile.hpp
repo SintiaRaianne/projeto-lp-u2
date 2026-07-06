@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <algorithm>
 
 /*
 Responsável por processar uma sequência de DNA, guardar o número máximo de repetições de cada STR e gerar um perfil.
@@ -20,7 +19,8 @@ private:
     
 public:
     DNAProfile();
-    
+    ~DNAProfile() = default;
+
     bool loadFromFile(const std::string& filename);         // Carrega a sequência de DNA de um arquivo, se carregar com sucesso, retorna True, se não, retorna False
 
     void setSequence(const std::string& sequence);         // Define a sequência de DNA diretamente

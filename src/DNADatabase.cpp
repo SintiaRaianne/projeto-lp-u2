@@ -42,7 +42,9 @@ bool DNADatabase::loadFromFile(const std::string& filename) {
                 strNames.push_back(tokens[i]);
             }
             isHeader = false;
-        } else {
+        } 
+        
+        else {
             // Linhas de dados
             if (tokens.size() < 2) continue;
             
@@ -67,14 +69,7 @@ bool DNADatabase::loadFromFile(const std::string& filename) {
     return loaded;
 }
 
-/* Função para procurar um perfil na base de dados
 
-- 
-- 
-- Se todas coincidirem, retorna o nome
-- Se nenhuma coincidir, retorna "no match found"
-
-*/
 std::string DNADatabase::findProfile(const std::map<std::string, int>& profile) const {
     if (!loaded) {          // Verifica se a base foi carregada
         return "no match found";
@@ -86,10 +81,15 @@ std::string DNADatabase::findProfile(const std::map<std::string, int>& profile) 
         
         // Para cada STR no perfil procurado, compara com a pessoa da base de dados
         for (const auto& strPair : profile) {
-            auto it = individual.strCounts.find(strPair.first);
-            if (it == individual.strCounts.end() || it->second != strPair.second) {
-                match = false;          // Não é um match
-                break;
+            const std::string& strName = strPair.first;      // Nome do STR
+            int count = strPair.second;                      // Contagem
+            
+            auto it = individual.strCounts.find(strName);   // Procura este STR no perfil da pessoa
+            
+            // Se não encontrou ou a contagem é diferente
+            if (it == individual.strCounts.end() || it->second != count) {
+                match = false;                              // Não é um match
+                break;          
             }
         }
         
@@ -110,12 +110,7 @@ bool DNADatabase::isLoaded() const {
     return loaded;
 }
 
-void DNADatabase::printDatabaseInfo() const {
-    std::cout << "Base de dados carregada: " << profiles.size() << " indivíduos" << std::endl;
-    std::cout << "STRs analisados: ";
-    for (size_t i = 0; i < strNames.size(); i++) {
-        std::cout << strNames[i];
-        if (i < strNames.size() - 1) std::cout << ", ";
-    }
-    std::cout << std::endl;
+// Retorna quantas pessoas estão na base
+size_t DNADatabase::getProfileCount() const {
+    return profiles.size();
 }

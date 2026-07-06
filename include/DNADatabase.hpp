@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <memory>
 
 /* 
 Estrutura para armazenar o perfil de um indivíduo
@@ -27,7 +26,8 @@ private:
     
 public:
     DNADatabase();
-    
+    ~DNADatabase() = default;
+
     bool loadFromFile(const std::string& filename);             // Carrega a base de dados do arquivo CSV
     
     std::string findProfile(const std::map<std::string, int>& profile) const;       // Busca pelo perfil na base de dados, retornando a pessoa encontrada ou "no match found"
@@ -36,7 +36,7 @@ public:
     
     bool isLoaded() const;                      // Verifica se a base foi carregada corretamente
     
-    void printDatabaseInfo() const;           // Retorna informações da base
+    size_t getProfileCount() const;          // Retorna quantas pessoas estão na base
 };
 
 #endif

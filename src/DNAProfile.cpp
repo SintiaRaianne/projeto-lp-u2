@@ -2,6 +2,7 @@
 #include <fstream>                          // Ler arquivos
 #include <iostream>                         // Mensagens de erro
 #include <sstream>                          // Funções como remove()
+#include <algorithm>
 
 DNAProfile::DNAProfile() {}
 

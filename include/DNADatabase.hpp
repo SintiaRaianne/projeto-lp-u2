@@ -6,7 +6,7 @@
 #include <map>
 
 /* 
-Estrutura para armazenar o perfil de um indivíduo
+Responsável por armazenar o perfil de um indivíduo
 
 Cada pessoa na base de dados tem: 
  - Um nome (string)

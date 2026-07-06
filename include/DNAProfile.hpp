@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <algorithm>
+
 
 /*
 Responsável por processar uma sequência de DNA, guardar o número máximo de repetições de cada STR e gerar um perfil.

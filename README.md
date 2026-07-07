@@ -16,30 +16,13 @@ O objetivo é implementar um sistema chamado `dnaprofiler` capaz de:
 ## 📂 Estrutura do Projeto
 
 - `projeto/`: Projeto principal da unidade
-  - `include/`: Arquivos de cabeçalho (.hpp)
-    - `DNADatabase.hpp`
-    - `DNAProfile.hpp`
-    - `DNAOutput.hpp`
-    - `utils.hpp`
-  - `src/`: Arquivos de implementação (.cpp)
-    - `main.cpp`
-    - `DNADatabase.cpp`
-    - `DNAProfile.cpp`
-    - `DNAOutput.cpp`
+  - `include/`: Cabeçalhos (.hpp)
+  - `src/`: Implementações (.cpp)
   - `data/`: Dados de teste
     - `small/`: Dataset pequeno
-      - `database.csv`
-      - `1.txt`
-      - `2.txt`
-      - `3.txt`
-      - `4.txt`
     - `large/`: Dataset grande
-      - `database.csv`
-      - `1.txt` até `16.txt`
-  - `Makefile`: Automação de compilação
-  - `README.md`: Documentação do projeto
-
-
+  - `Makefile`: Compilação
+  - `README.md`: Documentação
 
 ## 🛠️ Requisitos do Sistema
 

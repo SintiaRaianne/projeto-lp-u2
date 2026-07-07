@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
     // Processa a sequência de DNA para encontrar as contagens de STRs
     DNAOutput::showSearching();
     std::vector<std::string> strsToProcess = database.getSTRNames();    // Pega os nomes dos STRs da base
-    dnaProfile.processSTRs(strsToProcess);                   // Processa o DNA para encontrar contagens
+    dnaProfile.processSTRs(strsToProcess);                          // Processa o DNA para encontrar contagens
     
     // Encontra o perfil gerado
     auto profile = dnaProfile.getAllSTRCounts();    

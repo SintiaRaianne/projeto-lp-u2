@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-/**
+/*
  Responsável pelo função principal do programa:
 
 - Mostra o cabeçalho do programa

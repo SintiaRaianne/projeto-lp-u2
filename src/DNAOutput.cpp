@@ -1,7 +1,9 @@
 #include "DNAOutput.hpp"
-#include <iostream>                                 // Cout e Cerr
-#include <iomanip>                                  // Formatação
-#include <algorithm>                                // Funções como min()
+#include <iostream>
+#include <iomanip>
+#include <algorithm>
+#include <vector>
+#include <map>
 
 // Definição das cores ANSI
 const std::string DNAOutput::RESET = "\033[0m";
@@ -13,20 +15,48 @@ const std::string DNAOutput::CYAN = "\033[36m";
 const std::string DNAOutput::MAGENTA = "\033[35m";
 const std::string DNAOutput::BOLD = "\033[1m";
 
+// ============================================================
+// FUNÇÃO PARA CENTRALIZAR TEXTO NO TERMINAL
+// ============================================================
+std::string centerText(const std::string& text, int width = 80) {
+    int padding = (width - text.length()) / 2;
+    if (padding < 0) padding = 0;
+    return std::string(padding, ' ') + text;
+}
 
-// O cabeçalho é mostrado sempre que o programa é executado
+// ============================================================
+// WELCOME CENTRALIZADO NO TERMINAL COM PULO DE LINHA
+// ============================================================
 void DNAOutput::showWelcome() {
-    std::cout << BOLD << "Welcome to the C++ DNA Profiler, v1.0" << RESET << std::endl;
-    std::cout << "Copyright (C) 2024, Danilo Curvelo" << std::endl;
+    // Pula uma linha antes do welcome
     std::cout << std::endl;
-    std::cout << "This program loads a DNA database and an unknown DNA sequence and tries" << std::endl;
-    std::cout << "to find a match between the input DNA sequence and the DNA database." << std::endl;
+    
+    int terminalWidth = 80;  // Largura padrão do terminal
+    
+    // Linha superior de "=" centralizada
+    std::string topLine = std::string(40, '=');
+    std::cout << centerText(topLine, terminalWidth) << std::endl;
+    
+    // Welcome centralizado
+    std::cout << centerText("Welcome to the C++ DNA Profiler, v1.0", terminalWidth) << std::endl;
+    
+    // Copyright centralizado
+    std::cout << centerText("Copyright (C) 2026, Gabriel Paiva Flavio Henrique , Sintia Raianne", terminalWidth) << std::endl;
+    
+    // Linha inferior de "=" centralizada
+    std::cout << centerText(topLine, terminalWidth) << std::endl;
+    std::cout << std::endl;
+    
+    // Descrição do programa (também centralizada)
+    std::cout << centerText("This program loads a DNA database and an unknown DNA sequence and tries", terminalWidth) << std::endl;
+    std::cout << centerText("to find a match between the input DNA sequence and the DNA database.", terminalWidth) << std::endl;
     std::cout << std::endl;
 }
 
-// Mostra o status de carregamento de um arquivo (Tipo, Nome, [OK] se carregou e [FAILED] se falhou)
-void DNAOutput::showLoading(const std::string& fileType, const std::string& filename, bool success) {
-    std::cout << "[+] Loading " << fileType << " file [" << filename << "] ... ";
+void DNAOutput::showLoading(const std::string& fileType, 
+                           const std::string& filename, 
+                           bool success) {
+    std::cout << "[+] Loading " << fileType << " file [" << RED << filename << RESET << "] ... ";
     if (success) {
         std::cout << GREEN << "[OK]" << RESET << std::endl;
     } else {
@@ -34,63 +64,102 @@ void DNAOutput::showLoading(const std::string& fileType, const std::string& file
     }
 }
 
-// Mostra mensagem de busca, quando o programa esta analisando o DNA e procurando na base de dados
 void DNAOutput::showSearching() {
     std::cout << std::endl;
     std::cout << "[+] Searching the database for a match... Please wait." << std::endl;
+    std::cout << "    ";
+    for (int i = 0; i < 60; i++) {
+        std::cout << "=";
+    }
+    std::cout << " [100%]" << std::endl;
     std::cout << std::endl;
 }
 
-// Imprime a representação visual de um STR
-void DNAOutput::printSTRVisual(const std::string& str, int count) {
-    
-    std::cout << CYAN << str << RESET << " ";           // Imprime o nome do STR em ciano
-    
-    // Alinhamento para 10 caracteres
-    for (int i = 0; i < 10 - (int)str.length(); i++) {
-        std::cout << " ";
-    }
-    
-    std::cout << "[x" << count << "]    ";             // Imprime a contagem
-    
-    // Desenha barras visuais para cada repetição
-    int barLength = std::min(count, 30);
-    for (int i = 0; i < barLength; i++) {
-        if (count > 0) {
-            std::cout << YELLOW << "▮" << RESET;
-        }
-    }
-    
-    // Se a contagem for maior que 30, mostra "..."
-    if (count > 30) {
-        std::cout << "...";
-    }
-    
+void DNAOutput::showMatchFound(const std::string& name, 
+                              const std::map<std::string, int>& profile,
+                              const std::string& sequence,
+                              const std::vector<std::string>& strs) {
     std::cout << std::endl;
-}
-
-// Destaca os STRs na sequência de DNA
-void DNAOutput::highlightSequence(const std::string& sequence, 
-                                 const std::map<std::string, int>& strCounts,
-                                 const std::vector<std::string>& strs) {
+    std::cout << BOLD << "Match ID (99.9%): " << GREEN << name << RESET << std::endl;
     std::cout << std::endl;
     
+    // ============================================================
+    // PASSO 1: Criar um mapa de posições onde cada STR aparece
+    // ============================================================
+    struct STRInfo {
+        std::string name;
+        size_t startPos;
+        size_t endPos;
+        int count;
+        size_t length;
+    };
     
-    std::vector<std::pair<size_t, size_t>> highlights;                  // Encontra todas as ocorrências de STRs 
+    std::vector<STRInfo> strInfos;
     
-
-    // Para cada STR na lista, guarda a posição e o comprimento
     for (const std::string& str : strs) {
-        size_t pos = 0;
-        while ((pos = sequence.find(str, pos)) != std::string::npos) {
-            highlights.push_back({pos, str.length()});
-            pos += str.length();
+        auto it = profile.find(str);
+        if (it == profile.end()) continue;
+        
+        size_t firstPos = sequence.find(str);
+        if (firstPos != std::string::npos) {
+            STRInfo info;
+            info.name = str;
+            info.startPos = firstPos;
+            info.count = it->second;
+            info.length = str.length();
+            info.endPos = firstPos + (it->second * str.length());
+            strInfos.push_back(info);
         }
     }
     
-    std::sort(highlights.begin(), highlights.end());           // Ordena os highlights por posição
+    std::sort(strInfos.begin(), strInfos.end(),
+              [](const STRInfo& a, const STRInfo& b) {
+                  return a.startPos < b.startPos;
+              });
     
-    // Remove highlights sobrepostos (mantém o primeiro)
+    // ============================================================
+    // CONSTRUIR AS TRÊS LINHAS
+    // ============================================================
+    size_t seqLength = sequence.length();  // Mudou de int para size_t
+    std::string line1(seqLength, ' ');
+    std::string line2(seqLength, ' ');
+    
+    for (const auto& info : strInfos) {
+        // LINHA 1: Nome do STR
+        std::string strDisplay = info.name + " [x" + std::to_string(info.count) + "]";
+        size_t pos = info.startPos;
+        
+        // CORRIGIDO: Usando size_t em vez de int
+        for (size_t i = 0; i < strDisplay.length() && pos + i < seqLength; i++) {
+            line1[pos + i] = strDisplay[i];
+        }
+        
+        // LINHA 2: Barras "v"
+        size_t currentPos = info.startPos;
+        for (int rep = 0; rep < info.count; rep++) {
+            // CORRIGIDO: Usando size_t em vez de int
+            for (size_t i = 0; i < info.length && currentPos + i < seqLength; i++) {
+                line2[currentPos + i] = 'v';
+            }
+            currentPos += info.length;
+        }
+    }
+    
+    // ============================================================
+    // LINHA 3: Sequência com STRs em VERDE
+    // ============================================================
+    std::string line3 = "";
+    std::vector<std::pair<size_t, size_t>> highlights;
+    
+    for (const auto& info : strInfos) {
+        size_t pos = info.startPos;
+        for (int i = 0; i < info.count; i++) {
+            highlights.push_back({pos, info.length});
+            pos += info.length;
+        }
+    }
+    
+    std::sort(highlights.begin(), highlights.end());
     std::vector<std::pair<size_t, size_t>> finalHighlights;
     for (const auto& h : highlights) {
         bool overlap = false;
@@ -105,65 +174,54 @@ void DNAOutput::highlightSequence(const std::string& sequence,
         }
     }
     
-    // Mostra a sequência com destaque
     size_t currentPos = 0;
     for (const auto& h : finalHighlights) {
-        
-        std::cout << sequence.substr(currentPos, h.first - currentPos);         // Parte normal (sem destaque)
-        
-        std::cout << GREEN << BOLD << sequence.substr(h.first, h.second) << RESET;          // Parte destacada
-        currentPos = h.first + h.second;                    // Atualiza a posição atual
+        line3 += sequence.substr(currentPos, h.first - currentPos);
+        line3 += GREEN + BOLD + sequence.substr(h.first, h.second) + RESET;
+        currentPos = h.first + h.second;
     }
-    // Mostra o restante da sequencia depois do ultimo destaque
-    std::cout << sequence.substr(currentPos);
-    std::cout << std::endl;
-}
-
-// Mostra quando um match é encontrado
-void DNAOutput::showMatchFound(const std::string& name, 
-                              const std::map<std::string, int>& profile,
-                              const std::string& sequence,
-                              const std::vector<std::string>& strs) {
-                        
-    // Mostra o nome da pessoa encontrada                             
-    std::cout << BOLD << "Match ID (99.9%): " << GREEN << name << RESET << std::endl;  
-    std::cout << std::endl;
+    line3 += sequence.substr(currentPos);
     
-    // Mostra visualização dos STRs, com barras visuais para cada um na lista
-    for (const std::string& str : strs) {
-        auto it = profile.find(str);
-        if (it != profile.end()) {
-            printSTRVisual(str, it->second);
+    // ============================================================
+    // APLICAR CORES
+    // ============================================================
+    std::string coloredLine1 = "";
+    std::string coloredLine2 = "";
+    
+    for (char c : line1) {
+        if (c == ' ') {
+            coloredLine1 += ' ';
+        } else {
+            coloredLine1 += CYAN + std::string(1, c) + RESET;
         }
     }
     
-    // Mostra a barra separadora
-    std::cout << std::endl;
-    for (int i = 0; i < 50; i++) {
-        std::cout << CYAN << "v" << RESET;
+    for (char c : line2) {
+        if (c == ' ') {
+            coloredLine2 += ' ';
+        } else {
+            coloredLine2 += CYAN + std::string(1, c) + RESET;
+        }
     }
-    std::cout << std::endl << std::endl;
     
-    // Mostra a sequência com destaque
-    highlightSequence(sequence, profile, strs);
-    
-    // Mostra porcentagem
+    // ============================================================
+    // MOSTRA
+    // ============================================================
+    std::cout << coloredLine1 << std::endl;
+    std::cout << coloredLine2 << std::endl;
+    std::cout << line3 << std::endl;
     std::cout << std::endl;
-    std::cout << BOLD << GREEN << "100 %" << RESET << std::endl;
 }
 
-// Mostra quando não há match encontrado
 void DNAOutput::showNoMatch() {
     std::cout << std::endl;
     std::cout << BOLD << RED << ">>> Sorry, no match found in our database." << RESET << std::endl;
 }
 
-// Mostra mensagens de erro com cerr em vez de cout
 void DNAOutput::showError(const std::string& message) {
     std::cerr << RED << "[ERROR] " << RESET << message << std::endl;
 }
 
-// Mostra instruções de uso do programa
 void DNAOutput::showUsage() {
     std::cout << std::endl;
     std::cout << "Uso: ./dnaprofiler -d <database_file> -s <dna_sequence_file>" << std::endl;

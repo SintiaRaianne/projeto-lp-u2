@@ -18,7 +18,7 @@ const std::string DNAOutput::BOLD = "\033[1m";
 // ============================================================
 // FUNÇÃO PARA CENTRALIZAR TEXTO NO TERMINAL
 // ============================================================
-std::string centerText(const std::string& text, int width = 80) {
+std::string centerText(const std::string& text, int width = 150) {
     int padding = (width - text.length()) / 2;
     if (padding < 0) padding = 0;
     return std::string(padding, ' ') + text;
@@ -31,17 +31,14 @@ void DNAOutput::showWelcome() {
     // Pula uma linha antes do welcome
     std::cout << std::endl;
     
-    int terminalWidth = 80;  // Largura padrão do terminal
+    int terminalWidth = 150;  // Largura padrão do terminal
     
     // Linha superior de "=" centralizada
-    std::string topLine = std::string(40, '=');
+    std::string topLine = std::string(150, '=');
     std::cout << centerText(topLine, terminalWidth) << std::endl;
     
     // Welcome centralizado
-    std::cout << centerText("Welcome to the C++ DNA Profiler, v1.0", terminalWidth) << std::endl;
-    
-    // Copyright centralizado
-    std::cout << centerText("Copyright (C) 2026, Gabriel Paiva Flavio Henrique , Sintia Raianne", terminalWidth) << std::endl;
+    std::cout << centerText("Welcome to the C++ DNA Profiler", terminalWidth) << std::endl;
     
     // Linha inferior de "=" centralizada
     std::cout << centerText(topLine, terminalWidth) << std::endl;
@@ -68,7 +65,7 @@ void DNAOutput::showSearching() {
     std::cout << std::endl;
     std::cout << "[+] Searching the database for a match... Please wait." << std::endl;
     std::cout << "    ";
-    for (int i = 0; i < 60; i++) {
+    for (int i = 0; i < 150; i++) {
         std::cout << "=";
     }
     std::cout << " [100%]" << std::endl;

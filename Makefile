@@ -1,7 +1,3 @@
-# ============================================================
-# MAKEFILE - DNA Profiler (Windows com Git Bash/WSL)
-# ============================================================
-
 # Compilador
 CXX = g++
 CXXFLAGS = -Wall -Wextra -std=c++17 -O2 -Iinclude

@@ -15,18 +15,13 @@ const std::string DNAOutput::CYAN = "\033[36m";
 const std::string DNAOutput::MAGENTA = "\033[35m";
 const std::string DNAOutput::BOLD = "\033[1m";
 
-// ============================================================
-// FUNÇÃO PARA CENTRALIZAR TEXTO NO TERMINAL
-// ============================================================
+// Função para centralizar texto
 std::string centerText(const std::string& text, int width = 150) {
     int padding = (width - text.length()) / 2;
     if (padding < 0) padding = 0;
     return std::string(padding, ' ') + text;
 }
 
-// ============================================================
-// WELCOME CENTRALIZADO NO TERMINAL COM PULO DE LINHA
-// ============================================================
 void DNAOutput::showWelcome() {
     // Pula uma linha antes do welcome
     std::cout << std::endl;
@@ -80,9 +75,7 @@ void DNAOutput::showMatchFound(const std::string& name,
     std::cout << BOLD << "Match ID (99.9%): " << GREEN << name << RESET << std::endl;
     std::cout << std::endl;
     
-    // ============================================================
-    // PASSO 1: Criar um mapa de posições onde cada STR aparece
-    // ============================================================
+  
     struct STRInfo {
         std::string name;
         size_t startPos;
@@ -114,9 +107,7 @@ void DNAOutput::showMatchFound(const std::string& name,
                   return a.startPos < b.startPos;
               });
     
-    // ============================================================
-    // CONSTRUIR AS TRÊS LINHAS
-    // ============================================================
+ 
     size_t seqLength = sequence.length();  // Mudou de int para size_t
     std::string line1(seqLength, ' ');
     std::string line2(seqLength, ' ');
@@ -142,9 +133,7 @@ void DNAOutput::showMatchFound(const std::string& name,
         }
     }
     
-    // ============================================================
     // LINHA 3: Sequência com STRs em VERDE
-    // ============================================================
     std::string line3 = "";
     std::vector<std::pair<size_t, size_t>> highlights;
     
@@ -179,9 +168,7 @@ void DNAOutput::showMatchFound(const std::string& name,
     }
     line3 += sequence.substr(currentPos);
     
-    // ============================================================
-    // APLICAR CORES
-    // ============================================================
+    // Adicionar cores às linhas 1 e 2
     std::string coloredLine1 = "";
     std::string coloredLine2 = "";
     
@@ -201,9 +188,7 @@ void DNAOutput::showMatchFound(const std::string& name,
         }
     }
     
-    // ============================================================
-    // MOSTRA
-    // ============================================================
+
     std::cout << coloredLine1 << std::endl;
     std::cout << coloredLine2 << std::endl;
     std::cout << line3 << std::endl;
